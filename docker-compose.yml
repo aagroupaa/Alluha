@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: allura-web
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://allura:allura@db:5432/allura
+    restart: unless-stopped
+
+  db:
+    image: postgres:15-alpine
+    container_name: allura-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=allura
+      - POSTGRES_PASSWORD=allura
+      - POSTGRES_DB=allura
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
